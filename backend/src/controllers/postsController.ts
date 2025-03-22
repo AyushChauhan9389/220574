@@ -47,7 +47,7 @@ export const getPosts = async (req: Request, res: Response): Promise<any> => {
     } else if (type === "latest") {
     const latestPosts = allPosts
       .sort((a, b) => b.id - a.id)
-      .slice(0, 10)
+      .slice(0, 5)
       .map(post => ({
       ...post,
       commentsCount: postCommentCounts[post.id]
