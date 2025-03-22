@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react"
-import { FetchTopUsers, FetchPostsPopular } from "./actions/fetch"
+import { FetchTopUsers, FetchPostsPopular, FetchLatestPosts } from "./actions/fetch"
 import type { TopUser, Post, ExtendedPosts } from "./types/types"
 import { RefreshCw } from "lucide-react"
 
-type Tab = "users" | "posts"
+type Tab = "users" | "posts" | "latest"
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<Tab>("users")
   const [topUsers, setTopUsers] = useState<TopUser[]>([])
   const [popularPosts, setPopularPosts] = useState<ExtendedPosts[]>([])
+  const [latestPosts, setLatestPosts] = useState<Post[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [isRefreshing, setIsRefreshing] = useState(false)
@@ -19,9 +20,12 @@ export default function App() {
       if (activeTab === "users") {
         const response = await FetchTopUsers()
         setTopUsers(response.topUsers)
-      } else {
+      } else if (activeTab === "posts") {
         const response = await FetchPostsPopular()
         setPopularPosts(response.popularPosts)
+      } else {
+        const response = await FetchLatestPosts()
+        setLatestPosts(response.latestPosts)
       }
       setError(null)
     } catch (err) {
@@ -67,6 +71,16 @@ export default function App() {
         >
           Popular Posts
         </button>
+        <button
+          onClick={() => setActiveTab("latest")}
+          className={`px-4 py-2 font-medium transition-all ${
+            activeTab === "latest"
+              ? "text-black border-b-2 border-black"
+              : "text-gray-500 hover:text-gray-900"
+          }`}
+        >
+          Latest Posts
+        </button>
       </div>
 
       {isRefreshing && (
@@ -77,7 +91,7 @@ export default function App() {
       )}
 
       <h1 className="text-3xl font-bold text-gray-800 mb-6">
-        {activeTab === "users" ? "Top Users" : "Popular Posts"}
+        {activeTab === "users" ? "Top Users" : activeTab === "posts" ? "Popular Posts" : "Latest Posts"}
       </h1>
 
       {loading && (
@@ -134,10 +148,10 @@ export default function App() {
         </div>
       )}
 
-      {!loading && !error && activeTab === "posts" && (
+      {!loading && !error && (activeTab === "posts" || activeTab === "latest") && (
         <div className="bg-white rounded-lg shadow-xl overflow-hidden border border-gray-100">
           <ul className="divide-y divide-gray-100">
-            {popularPosts.map((post, index) => (
+            {(activeTab === "posts" ? popularPosts : latestPosts).map((post, index) => (
               <li
                 key={index}
                 className="p-4 hover:bg-gray-50 transition-all"
@@ -152,11 +166,6 @@ export default function App() {
                     <p className="text-sm text-gray-900">{post.content}</p>
                     <div className="flex items-center gap-2 mt-2">
                       <span className="text-xs text-gray-500">Post ID: {post.id}</span>
-                      {post.commentsCount !== undefined && (
-                        <span className="bg-gray-200 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                          {post.commentsCount} comments
-                        </span>
-                      )}
                     </div>
                   </div>
                 </div>
@@ -168,7 +177,8 @@ export default function App() {
 
       {!loading && !error && 
         ((activeTab === "users" && topUsers.length === 0) || 
-         (activeTab === "posts" && popularPosts.length === 0)) && (
+         ((activeTab === "posts" && popularPosts.length === 0) || 
+          (activeTab === "latest" && latestPosts.length === 0))) && (
         <div className="text-center p-8 bg-gray-50 rounded-lg">
           <p className="text-gray-500">No users found</p>
         </div>

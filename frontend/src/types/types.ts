@@ -60,3 +60,7 @@ export interface ExtendedPosts extends Post {
 export interface FetchPopularResponse {
   popularPosts: ExtendedPosts[];
 }
+
+export interface FetchLatestPostsResponse  {
+  latestPosts: Post[];
+};

@@ -1,4 +1,4 @@
-import { FetchPopularResponse, TopUsersResponse } from "../types/types";
+import { FetchLatestPostsResponse, FetchPopularResponse, TopUsersResponse } from "../types/types";
 
 export async function FetchTopUsers(): Promise<TopUsersResponse> {
   const data = await fetch("http://localhost:8080/users");
@@ -7,9 +7,15 @@ export async function FetchTopUsers(): Promise<TopUsersResponse> {
 }
 
 
-export async function FetchPostsPopular() : Promise<FetchPopularResponse> {
+export async function FetchPostsPopular(): Promise<FetchPopularResponse> {
   const data = await fetch("http://localhost:8080/posts?type=popular");
   const posts = (await data.json()) as FetchPopularResponse;
   return posts;
+}
 
+
+export async function FetchLatestPosts(): Promise<FetchLatestPostsResponse>{
+  const data = await fetch("http://localhost:8080/posts?type=latest");
+  const posts = (await data.json()) as FetchLatestPostsResponse;
+  return posts;
 }
