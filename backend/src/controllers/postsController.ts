@@ -14,7 +14,7 @@ const fetchPostComments = async (postId: number): Promise<Comment[]> => {
     : [];
 };
 
-export const getPosts = async (req: Request, res: Response): Promise<Response> => {
+export const getPosts = async (req: Request, res: Response): Promise<any> => {
   const { type } = req.query;
   const usersResponse = await fetchData<UsersResponse>("users");
   if (!usersResponse || !usersResponse.users) {
