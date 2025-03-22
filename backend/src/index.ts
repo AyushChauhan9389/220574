@@ -8,6 +8,8 @@ import {
   TopUsersResponse,
   ErrorResponse,
   Post,
+  Comment,
+  CommentsResponse,
 } from "./types/types";
 import axios from "axios";
 import dotenv from "dotenv";
@@ -68,6 +70,12 @@ const fetchUserPosts = async (userId: string): Promise<Post[]> => {
   return postsResponse && postsResponse.posts ? postsResponse.posts : [];
 };
 
+const fetchPostComments = async (postId: number): Promise<Comment[]> => {
+  const commentsResponse = await fetchData<CommentsResponse>(`posts/${postId}/comments`);
+  return commentsResponse && commentsResponse.comments
+    ? commentsResponse.comments
+    : [];
+};
 router.get("/", (_req: Request, res: Response) => {
   res.send("Hello, TypeScript Express!");
 });
@@ -99,17 +107,41 @@ app.get("/users", async (_req: Request, res: Response) => {
   res.json({ topUsers });
 });
 
-app.get("/posts", async (_req: Request, res: Response) => {
-  
-  const postsResponse = await fetchData<PostsResponse>("posts");
-  if (!postsResponse || !postsResponse.posts) {
-    res.status(500).json({ error: "Failed to fetch posts" });
-    return;
+
+app.get("/posts", async (req: Request, res: Response): Promise<any> => {
+  const { type } = req.query;
+  const usersResponse = await fetchData<UsersResponse>("users");
+  if (!usersResponse || !usersResponse.users) {
+    return res.status(500).json({ error: "Failed to fetch users" });
   }
 
-  // Type the posts response using the PostsResponse interface.
-  const posts: PostsResponse = postsResponse as PostsResponse;
-  res.json(posts);
+  const userIds = Object.keys(usersResponse.users);
+  let allPosts: Post[] = [];
+
+  for (const userId of userIds) {
+    const userPosts = await fetchUserPosts(userId);
+    allPosts = allPosts.concat(userPosts);
+  }
+
+  if (type === "popular") {
+    const postCommentCounts: Record<number, number> = {};
+
+    for (const post of allPosts) {
+      const comments = await fetchPostComments(post.id);
+      postCommentCounts[post.id] = comments.length;
+    }
+
+    const maxComments = Math.max(...Object.values(postCommentCounts));
+    const popularPosts = allPosts.filter(
+      (post) => postCommentCounts[post.id] === maxComments
+    );
+    return res.json({ popularPosts });
+  } else if (type === "latest") {
+    const latestPosts = allPosts.sort((a, b) => b.id - a.id).slice(0, 5);
+    return res.json({ latestPosts });
+  }
+
+  return res.status(400).json({ error: "Invalid type parameter" });
 });
 
 
