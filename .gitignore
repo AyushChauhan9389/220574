@@ -1,0 +1,6 @@
+# Dependencies
+backend/node_modules/
+
+# Build outputs
+backend/dist/
+
