@@ -53,4 +53,10 @@ export interface ErrorResponse {
   error: string;
 }
 
+export interface ExtendedPosts extends Post {
+  commentsCount: number;
+}
 
+export interface FetchPopularResponse {
+  popularPosts: ExtendedPosts[];
+}

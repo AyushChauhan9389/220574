@@ -29,23 +29,32 @@ export const getPosts = async (req: Request, res: Response): Promise<any> => {
     allPosts = allPosts.concat(userPosts);
   }
 
-  if (type === "popular") {
-    const postCommentCounts: Record<number, number> = {};
+  const postCommentCounts: Record<number, number> = {};
 
-    for (const post of allPosts) {
-      const comments = await fetchPostComments(post.id);
-      postCommentCounts[post.id] = comments.length;
+  for (const post of allPosts) {
+    const comments = await fetchPostComments(post.id);
+    postCommentCounts[post.id] = comments.length;
+  }
+
+  if (type === "popular") {
+    const popularPosts = allPosts
+      .sort((a, b) => postCommentCounts[b.id] - postCommentCounts[a.id])
+      .map(post => ({
+        ...post,
+        commentsCount: postCommentCounts[post.id]
+      }));
+    return res.json({ popularPosts });
+    } else if (type === "latest") {
+    const latestPosts = allPosts
+      .sort((a, b) => b.id - a.id)
+      .slice(0, 10)
+      .map(post => ({
+      ...post,
+      commentsCount: postCommentCounts[post.id]
+      }));
+    return res.json({ latestPosts });
     }
 
-    const maxComments = Math.max(...Object.values(postCommentCounts));
-    const popularPosts = allPosts.filter(
-      (post) => postCommentCounts[post.id] === maxComments
-    );
-    return res.json({ popularPosts });
-  } else if (type === "latest") {
-    const latestPosts = allPosts.sort((a, b) => b.id - a.id).slice(0, 5);
-    return res.json({ latestPosts });
-  }
 
   return res.status(400).json({ error: "Invalid type parameter" });
 };
