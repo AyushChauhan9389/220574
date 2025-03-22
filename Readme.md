@@ -58,7 +58,23 @@ View users ranked by their post count
 
 ## Getting Started
 
-### Backend Setup
+### Quick Start (Windows)
+Use the provided batch script to install dependencies and run both servers:
+```cmd
+start.bat
+```
+The script will:
+1. Install dependencies for both frontend and backend
+2. Build the backend project
+3. Start the backend server on port 8080
+4. Start the frontend development server on port 3000
+5. Show progress with timestamps
+6. Open separate terminal windows for each server
+7. Close all servers when the main script window is closed
+
+### Manual Setup
+
+#### Backend Setup
 ```bash
 cd backend
 npm install
@@ -67,7 +83,7 @@ npm run build  # For production build
 npm start      # To start production server
 ```
 
-### Frontend Setup
+#### Frontend Setup
 ```bash
 cd frontend
 npm install
