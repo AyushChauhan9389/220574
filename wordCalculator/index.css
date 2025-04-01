@@ -1,0 +1,59 @@
+body{
+    margin: 0px;
+    padding: 0pxs;
+}
+
+.default-body{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-heading{
+    margin-top: 16px;
+    margin-bottom: 16px;
+    font-size: 30px;
+    height: 40px;
+    font-weight: 600;
+}
+
+textarea{
+    width: 100%;
+    border: none;
+    border-color: none;
+}
+
+.input-div{
+    gap: 6px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 600px;
+    border: 2px solid black;
+}
+
+
+.data-div{
+    display: flex;
+    gap: 20px;
+}
+p{
+    width: 150px;
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+#wordCount, #sentencesCount, #charactersCount{
+    color: blue;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}

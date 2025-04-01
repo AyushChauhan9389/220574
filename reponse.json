@@ -1,0 +1,28 @@
+[
+  {
+    "userId": 1,
+    "postContent": "Test content",
+    "timestamp": "",
+    "comments": [
+        {
+            "commentID": 1,
+            "commentContent": "test"
+        }
+    ]
+  },
+  {
+    "userId": 1,
+    "postContent": "Test content",
+    "timestamp": ""
+  },
+  {
+    "userId": 2,
+    "postContent": "Test content",
+    "timestamp": ""
+  },
+  {
+    "userId": 3,
+    "postContent": "Test content",
+    "timestamp": ""
+  }
+]

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <div class="default-body">
+        <div class="input-div">
+            <span class="main-heading">Word Count Calculator</span>
+            <div>
+                <textarea name="input" id="textInput" placeholder="Enter the text here" rows="10" cols="70"></textarea>
+            </div>
+            <div>
+                <button>Clear Text</button>
+            </div>
+
+            <div class="data-div">
+
+                <p><span id="wordCount">0</span>Words</p>
+                <p><span id="sentencesCount">0</span>Sentences</p>
+                <p><span id="charactersCount">0</span>Characters</p>
+
+            </div>
+        </div>
+    </div>
+    <script>
+
+        document.getElementById("textInput").addEventListener("input", function () {
+            let text = this.value;
+            let words = text.trim().length > 0 ? text.split(/\s+/).length : 0;
+            let Sentences = text.trim().length > 0 ? text.split(/[.!?]+/).filter(s => s.trim().length > 0).lenght : 0;
+            let characters = text.length
+
+            document.getElementById("wordCount").textContent = words;
+            document.getElementById("sentencesCount").textContent = Sentences;
+            document.getElementById("charactersCount").textContent = characters;
+
+        });
+    </script>
+</body>
+
+</html>
